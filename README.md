@@ -19,7 +19,7 @@ The cheat-sheet will somewhat focus on `C/C++`, but will also touch some other l
 - [Passing secrets to another program via the command line (All languages)](#passing-secrets-to-another-program-via-the-command-line)
 - [Excessive privileges for a resource](#excessive-privileges-for-a-resource)
 
-<a name="#unintended-default-enum-values"></a>
+<a name="unintended-default-enum-values"></a>
 ## Unintended default enum values (Any language)
 Enumeration is a well-known and wide-spread construct of many programming languages. Enumeration defines a set of distinct names in the common named scope and assigns some values to them. Unfortunately, enum mishandling may lead to critical vulnerabilities in some cases. Let's look at the following example:
 ```cpp
@@ -78,7 +78,7 @@ And here things can turn really bad. If there is a way to call this function for
 
 **Advice for code reviewers and for developers:** pay attention to default enum values. Pay attention to default values of other critical fields of classes and structs. Static code analysis tools may not report such problems.
 
-<a name="#unhandled-unexpected-mishandled-exceptions"></a>
+<a name="unhandled-unexpected-mishandled-exceptions"></a>
 ## Unhandled, unexpected, mishandled exceptions (Any language)
 Exceptions is a big part of many programming languages. Unfortunately, many programmers fail to handle them correctly, which may lead to vulnerabilities in code. Let's look at some of such cases.
 
@@ -126,7 +126,7 @@ Some developers (especially C++) sometimes pretend, that exceptions do not exist
 
 **Advice for developers:** pay close attention to exception handling. Check all the external functions you use. Do they throw exceptions? Do you handle them correctly? Do not ignore exceptions in exception-enabled languages, as the performance boost you (probably) get may not be so drastic compared to the bugs you may unintentionally bring to your code.
 
-<a name="#safe-unsafe-functions"></a>
+<a name="safe-unsafe-functions"></a>
 ## Safe unsafe functions (C/C++)
 Many companies currently enforce usage of so-called "safe" `C/C++` functions instead of `unsafe` ones. For example, developers must use `strcpy_s` instead of `strcpy` or `scanf_s` instead of `scanf`. Some companies enforce these rules via code checking during automated build, some of them even develop their own "safe" libraries, which provide a set of such functions.
 
@@ -151,7 +151,7 @@ The function is "safe", but it still will overflow the `tempBuf` buffer. And I'v
 
 **Advice for developers:** if you code in C++, just learn modern C++ and don't use low-level functions at all. There is an extensive standard library, which completely removes the need to use these low-level functions. If you still need to write low-level code, **carefully** check, which arguments and in which order you pass to low-level functions.
 
-<a name="#race-conditions-and-their-possible-consequences"></a>
+<a name="race-conditions-and-their-possible-consequences"></a>
 ## Race conditions and their possible consequences (Any language)
 Race conditions and data races are quite common in code. Multithreaded code is hard to develop. Many programmers incorrectly utilize synchronization facilities in the language of their choice, or forget to synchronize access to some shared writable variable at all. Such bugs are sometimes hard to exploit, but sometimes they are extremely handy and easy to use for an attacker. Possible consequences of race conditions are program crashes, deadlocks and livelocks, or simply unintended program behavior. [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) vulnerabilities are also race conditions, but for now I will talk about inter-thread race conditions. Let's look at the following code snippet (based on real code):
 ```java
@@ -186,7 +186,7 @@ The code seems completely fine, until you realize that it may be called by many 
 
 **Advice for developers:** carefully check the multi-threaded code you write. Ask your colleagues to review such code. Do not ever [code by permutation](https://en.wikipedia.org/wiki/Programming_by_permutation) when working with several threads!
 
-<a name="#manual-buffer-manipulation-and-input-parsing"></a>
+<a name="manual-buffer-manipulation-and-input-parsing"></a>
 ## Manual buffer manipulation and input parsing (Any language)
 Well, this is a wide topic, and very many vulnerabilities and bugs have been found in code which parses something (file formats, user input, etc). With modern languages it is much more difficult to do something wrong (compared to C, for example) when parsing untrusted input, but even with high-level language facilities it is possible to make mistakes.
 
@@ -283,7 +283,7 @@ if (pos == std::string::npos) {
 
 **Advice for developers:** Do not ever [code by permutation](https://en.wikipedia.org/wiki/Programming_by_permutation) when parsing something! Do not trust user input in any way, check it as carefully as possible.
 
-<a name="#missed-switch-cases"></a>
+<a name="missed-switch-cases"></a>
 ## Missed switch cases (All languages)
 This is the one automated tools may tell you about in some cases. Let's start with an example:
 ```cpp
@@ -324,13 +324,13 @@ I believe, that for the code above, even automated static analysis tools will be
 
 **Advice for developers:** Carefully write `switch-case` clauses. Do not miss cases. Add the `default` case, which does something reasonable for unexpected cases. Put `case` values to enumeration (don't use constants or macros), so that automated analysis tools could warn you, if you forgot to handle a value inside your `switch`.
 
-<a name="#possibly-vulnerable-libraries-or-their-incorrect-usage"></a>
+<a name="possibly-vulnerable-libraries-or-their-incorrect-usage"></a>
 ## Possibly vulnerable libraries or their incorrect usage (All languages)
 There are some libraries, which have to trigger you as a code reviewer, when you see them in code.
 1. Any ZIP archive unpacking library. Or code, which unpacks ZIP archives manually. There is that infamous [Zip Slip](https://github.com/snyk/zip-slip-vulnerability) vulnerability, which is still present in different libraries by design. If used incorrectly, it opens a hole in software, which may allow an attacker to overwrite any file on the system!
 2. Any library for the XML format processing. There is [XXE](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing) vulnerabilities, and if you encounter XML processing in code, there is a chance, that these vulnerabilities may be present.
 
-<a name="#toctou-with-file-operations"></a>
+<a name="toctou-with-file-operations"></a>
 ## TOCTOU with file operations (All languages)
 Any file operations present in code may be vulnerable to [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) attacks. For example:
 - The file signature is first checked, and then the file is reopened and processed.
@@ -340,7 +340,7 @@ Any file operations present in code may be vulnerable to [TOCTOU](https://en.wik
 
 **Advice for developers:** Think about the order of file operations. Can it lead to race conditions in some cases?
 
-<a name="#improper-logging"></a>
+<a name="improper-logging"></a>
 ## Improper logging
 Often software writes logs. However, often logging is implemented incorrectly from the security point of view. Let's look at some improper logging scenarios:
 1. **Improper log entries escaping.** Logs often contain data received from the untrusted user. This data may contain any characters (including a newline character, null-bytes, etc). If this data is not properly escaped, an attacker may break log formatting. For example, new fake lines may be added to program logs, making log analysis more difficult or even impossible.
@@ -362,7 +362,7 @@ Often software writes logs. However, often logging is implemented incorrectly fr
 
 **Advice for developers:** Escape untrusted user data which is being written to logs. Do not write any user secrets to logs or mask them properly. Check how you log exceptions, as they may contain user secrets as well.
 
-<a name="#passing-secrets-to-another-program-via-the-command-line"></a>
+<a name="passing-secrets-to-another-program-via-the-command-line"></a>
 ## Passing secrets to another program via the command line (All languages)
 To pass secrets to another programs via the command line is quite a bad idea. On Linux, command lines with arguments may be visible in the process list (`ps`, `/proc`). They may be also logged to audit logs or `/var/log/...` logs. On Windows, the situation is similar: command lines with arguments may be readable from the process list, and they also [may be logged to the Event log](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing).
 
@@ -370,7 +370,7 @@ To pass secrets to another programs via the command line is quite a bad idea. On
 
 **Advice for developers:** Do not pass secrets to external programs via the command line. Use interactive input (pipes) or other means to do this.
 
-<a name="#excessive-privileges-for-a-resource"></a>
+<a name="excessive-privileges-for-a-resource"></a>
 ## Excessive privileges for a resource
 When any resource is acquired in code, it is in the best interest to request as less privileges as possible. Here are some examples:
 - A file is opened. If the program is going to only read the file, then it doesn't need write access to that file.
