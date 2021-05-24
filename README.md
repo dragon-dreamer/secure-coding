@@ -15,9 +15,9 @@ The cheat-sheet will somewhat focus on `C/C++`, but will also touch some other l
 - [Missed switch cases (All languages)](#missed-switch-cases)
 - [Possibly vulnerable libraries or their incorrect usage (All languages)](#possibly-vulnerable-libraries-or-their-incorrect-usage)
 - [TOCTOU with file operations (All languages)](#toctou-with-file-operations)
-- [Improper logging](#improper-logging)
+- [Improper logging (All languages)](#improper-logging)
 - [Passing secrets to another program via the command line (All languages)](#passing-secrets-to-another-program-via-the-command-line)
-- [Excessive privileges for a resource](#excessive-privileges-for-a-resource)
+- [Excessive privileges for a resource (All languages)](#excessive-privileges-for-a-resource)
 
 <a name="unintended-default-enum-values"></a>
 ## Unintended default enum values (Any language)
@@ -341,7 +341,7 @@ Any file operations present in code may be vulnerable to [TOCTOU](https://en.wik
 **Advice for developers:** Think about the order of file operations. Can it lead to race conditions in some cases?
 
 <a name="improper-logging"></a>
-## Improper logging
+## Improper logging (All languages)
 Often software writes logs. However, often logging is implemented incorrectly from the security point of view. Let's look at some improper logging scenarios:
 1. **Improper log entries escaping.** Logs often contain data received from the untrusted user. This data may contain any characters (including a newline character, null-bytes, etc). If this data is not properly escaped, an attacker may break log formatting. For example, new fake lines may be added to program logs, making log analysis more difficult or even impossible.
 2. **Writing unmasked secrets to logs.** Often developers write user secrets to logs (and often unintentionally). One case of such unintentional secrets logging is exception logging. for example:
@@ -371,7 +371,7 @@ To pass secrets to another programs via the command line is quite a bad idea. On
 **Advice for developers:** Do not pass secrets to external programs via the command line. Use interactive input (pipes) or other means to do this.
 
 <a name="excessive-privileges-for-a-resource"></a>
-## Excessive privileges for a resource
+## Excessive privileges for a resource (All languages)
 When any resource is acquired in code, it is in the best interest to request as less privileges as possible. Here are some examples:
 - A file is opened. If the program is going to only read the file, then it doesn't need write access to that file.
 - A database user is created. If the purpose of this user is to write data to tables, then it should not have `alter table` permissions.
