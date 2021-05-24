@@ -245,6 +245,7 @@ But what is much worse, the `char` type can be either `signed` or `unsigned`, de
 
 Let's conclude with a really simple one (even detectable by automatic analysis tools, even **reported by a compiler**), but which I still encountered several times:
 ```cpp
+std::string str = getUntrustedString();
 auto pos = str.find("text");
 if (pos < 0) {
     return;
@@ -253,6 +254,7 @@ if (pos < 0) {
 
 The `pos` variable is `unsigned` (of the `size_t` type). Thus, it can never be less then zero, and the check will always pass. The correct check is:
 ```cpp
+std::string str = getUntrustedString();
 auto pos = str.find("text");
 if (pos == std::string::npos) {
     return;
